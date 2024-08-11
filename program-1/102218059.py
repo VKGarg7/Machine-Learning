@@ -72,13 +72,13 @@ def topsis(matrix, weights, impacts):
     
     weight = norm * weights
 
-    solution = np.max(weight, axis=0) * (impacts == '+') + np.min(weight, axis=0) * (impacts == '-')
-    negative_solution = np.min(weight, axis=0) * (impacts == '+') + np.max(weight, axis=0) * (impacts == '-')
+    sol = np.max(weight, axis=0) * (impacts == '+') + np.min(weight, axis=0) * (impacts == '-')
+    neg_sol = np.min(weight, axis=0) * (impacts == '+') + np.max(weight, axis=0) * (impacts == '-')
 
-    positive_distance = np.sqrt(((weight - solution) ** 2).sum(axis=1))
-    negative_distance = np.sqrt(((weight - negative_solution) ** 2).sum(axis=1))
+    pos_dis = np.sqrt(((weight - sol) ** 2).sum(axis=1))
+    neg_dis = np.sqrt(((weight - neg_sol) ** 2).sum(axis=1))
     
-    scores = negative_distance / (positive_distance + negative_distance)
+    scores = neg_dis / (pos_dis + neg_dis)
      
     ranking = scores.argsort()[::-1] + 1
     
