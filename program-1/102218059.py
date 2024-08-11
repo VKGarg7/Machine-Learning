@@ -10,24 +10,24 @@ def download_and_convert_excel_to_csv(excel_url, roll_number):
     return csv_filename
 
 def topsis(decision_matrix, weights, impacts):
-    # Step 1: Normalize the decision matrix
+    # Step 1: 
     norm_matrix = decision_matrix / np.sqrt((decision_matrix**2).sum(axis=0))
     
-    # Step 2: Multiply each column by the corresponding weight
+    # Step 2:
     weighted_matrix = norm_matrix * weights
     
-    # Step 3: Determine the ideal and negative-ideal solutions
+    # Step 3: 
     ideal_solution = np.max(weighted_matrix, axis=0) * (impacts == '+') + np.min(weighted_matrix, axis=0) * (impacts == '-')
     negative_ideal_solution = np.min(weighted_matrix, axis=0) * (impacts == '+') + np.max(weighted_matrix, axis=0) * (impacts == '-')
     
-    # Step 4: Calculate the separation measures
+    # Step 4:
     positive_distance = np.sqrt(((weighted_matrix - ideal_solution) ** 2).sum(axis=1))
     negative_distance = np.sqrt(((weighted_matrix - negative_ideal_solution) ** 2).sum(axis=1))
     
-    # Step 5: Calculate the relative closeness to the ideal solution
+    # Step 5:
     scores = negative_distance / (positive_distance + negative_distance)
     
-    # Step 6: Rank the alternatives
+    # Step 6: 
     ranking = scores.argsort()[::-1] + 1
     
     return scores, ranking
@@ -52,7 +52,6 @@ def main():
         print("Error: Weights and impacts length must match the number of columns in the decision matrix")
         sys.exit(1)
 
-    # Step 3: Perform TOPSIS
     scores, ranking = topsis(decision_matrix, np.array(weights), np.array(impacts))
     
     results = pd.DataFrame({
