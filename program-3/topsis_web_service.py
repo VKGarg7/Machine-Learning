@@ -9,6 +9,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+import sendgrid
+from sendgrid.helpers.mail import Mail
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
@@ -43,38 +45,67 @@ def allowed_file(filename):
 #     text = msg.as_string()
 #     server.sendmail(from_address, to_address, text)
 #     server.quit()
-def send_email(to_address, filename):
-    from_address = "abc496116@gmail.com"
-    password = "Vansh#2004"
+# def send_email(to_address, filename):
+#     from_address = "abc496116@gmail.com"
+#     password = "Vansh#2004"
 
-    msg = MIMEMultipart()
-    msg['From'] = from_address
-    msg['To'] = to_address
-    msg['Subject'] = "TOPSIS Result File"
+#     msg = MIMEMultipart()
+#     msg['From'] = from_address
+#     msg['To'] = to_address
+#     msg['Subject'] = "TOPSIS Result File"
 
-    body = "Please find the attached TOPSIS result file."
-    msg.attach(MIMEText(body, 'plain'))
+#     body = "Please find the attached TOPSIS result file."
+#     msg.attach(MIMEText(body, 'plain'))
 
-    try:
-        with open(filename, "rb") as attachment:
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(attachment.read())
-            encoders.encode_base64(part)
-            part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(filename)}")
-            msg.attach(part)
-    except Exception as e:
-        logging.error(f"Failed to attach file {filename}: {e}")
-        return
+#     try:
+#         with open(filename, "rb") as attachment:
+#             part = MIMEBase('application', 'octet-stream')
+#             part.set_payload(attachment.read())
+#             encoders.encode_base64(part)
+#             part.add_header('Content-Disposition', f"attachment; filename={os.path.basename(filename)}")
+#             msg.attach(part)
+#     except Exception as e:
+#         logging.error(f"Failed to attach file {filename}: {e}")
+#         return
 
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(from_address, password)
-        server.sendmail(from_address, to_address, msg.as_string())
-        server.quit()
-        logging.info(f"Email sent successfully to {to_address}")
-    except Exception as e:
-        logging.error(f"Failed to send email: {e}")
+#     try:
+#         server = smtplib.SMTP('smtp.gmail.com', 587)
+#         server.starttls()
+#         server.login(from_address, password)
+#         server.sendmail(from_address, to_address, msg.as_string())
+#         server.quit()
+#         logging.info(f"Email sent successfully to {to_address}")
+#     except Exception as e:
+#         logging.error(f"Failed to send email: {e}")
+
+def send_email_sendgrid(to_address, filename):
+    sg = sendgrid.SendGridAPIClient(api_key='your_sendgrid_api_key')
+    from_email = 'abc496116@gmail.com'
+    subject = 'TOPSIS Result File'
+    content = 'Please find the attached TOPSIS result file.'
+
+    # Create a mail object
+    mail = Mail(
+        from_email=from_email,
+        to_emails=to_address,
+        subject=subject,
+        plain_text_content=content
+    )
+
+    # Add attachment
+    with open(filename, 'rb') as f:
+        mail.add_attachment(
+            file_content=f.read(),
+            file_type='application/octet-stream',
+            file_name=filename
+        )
+
+    # Send email
+    response = sg.send(mail)
+    print(f'Status Code: {response.status_code}')
+    print(f'Body: {response.body}')
+    print(f'Headers: {response.headers}')
+
 
 def topsis(data, weights, impacts):
     weights = np.array(weights)
