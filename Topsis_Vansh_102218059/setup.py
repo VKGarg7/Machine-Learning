@@ -14,9 +14,9 @@ setup(
     description="topsis",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/uditvashisht/saral-square",
-    author="Udit Vashisht",
-    author_email="admin@saralgyaan.com",
+    url="https://github.com/VKGarg7/Machine-Learning/tree/main/Topsis_Vansh_102218059",
+    author="Vansh Kumar Garg",
+    author_email="14garg04@gmail.com",
     license="MIT",
     classifiers=[
         "License :: OSI Approved :: MIT License",
@@ -24,12 +24,12 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
-    packages=["square"],
+    packages=["topsis"],
     include_package_data=True,
     install_requires=[],
     entry_points={
         "console_scripts": [
-            "square=square.__main__:main",
+            "topsis=topsis.__main__:main",
         ]
     },
 )
