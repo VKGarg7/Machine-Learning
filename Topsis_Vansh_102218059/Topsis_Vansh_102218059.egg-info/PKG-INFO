@@ -1,0 +1,18 @@
+Metadata-Version: 2.1
+Name: Topsis_Vansh_102218059
+Version: 1.0.0
+Summary: topsis
+Home-page: https://github.com/VKGarg7/Machine-Learning/tree/main/Topsis_Vansh_102218059
+Author: Vansh Kumar Garg
+Author-email: 14garg04@gmail.com
+License: MIT
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Topsis-FirstName-RollNumber
+
+This package implements the TOPSIS method for multi-criteria decision analysis. It allows users to rank alternatives based on their scores.
