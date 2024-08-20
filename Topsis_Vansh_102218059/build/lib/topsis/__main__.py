@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import sys
 
-def topsis(matrix, weights, impacts):
+def topsis( weights, impacts,matrix):
     norm = matrix / np.sqrt((matrix**2).sum(axis=0))
     
     weight = norm * weights
@@ -22,7 +22,7 @@ def topsis(matrix, weights, impacts):
 
 def main():
     if len(sys.argv) != 5:
-        print("Usage: python <program.py> <InputDataFile> <Weights> <Impacts> <ResultFileName>")
+        print("Usage: python <program.py>  <Weights> <Impacts> <InputDataFile> <ResultFileName>")
         sys.exit(1)
     
     input_file = sys.argv[1]
