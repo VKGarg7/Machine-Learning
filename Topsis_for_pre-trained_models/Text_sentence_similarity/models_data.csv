@@ -1,0 +1,5 @@
+Model,Accuracy,Inference Time,Memory Usage
+Model1,0.89,0.4,250
+Model2,0.85,0.5,200
+Model3,0.92,0.3,300
+Model4,0.87,0.6,220
