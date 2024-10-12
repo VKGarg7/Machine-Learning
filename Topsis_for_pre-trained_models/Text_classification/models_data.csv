@@ -1,0 +1,5 @@
+Model , Accuracy , F1-Score , Latency , Memory
+BERT , 0.89 , 0.88 , 300 , 500
+DistilBERT , 0.85 , 0.84 , 200 , 400
+RoBERTa , 0.91 , 0.90 , 350 , 600
+XLNet , 0.87 , 0.86 , 400 , 550
