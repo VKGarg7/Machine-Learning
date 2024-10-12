@@ -7,6 +7,7 @@ def topsis(data, weights, impacts):
     impacts = np.array([1 if i == '+' else -1 for i in impacts.split(',')])
 
     normalized_data = data / np.sqrt((data**2).sum(axis=0))
+
     weighted_normalized_data = normalized_data * weights
 
     ideal_best = np.max(weighted_normalized_data * impacts, axis=0)
