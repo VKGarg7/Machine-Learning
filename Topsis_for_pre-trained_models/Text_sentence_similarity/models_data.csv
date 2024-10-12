@@ -1,5 +1,5 @@
-Model,Accuracy,Inference Time,Memory Usage
-Model1,0.89,0.4,250
-Model2,0.85,0.5,200
-Model3,0.92,0.3,300
-Model4,0.87,0.6,220
+Model , Cosine Similarity Accuracy , Inference Time (ms) , Memory Usage (MB) , Model Size (MB)
+Model1 , 0.85 , 100 , 150 , 800
+Model2 , 0.89 , 120 , 140 , 750
+Model3 , 0.88 , 110 , 160 , 780
+Model4 , 0.90 , 95 , 130 , 810
