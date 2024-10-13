@@ -1,82 +1,94 @@
-import sys
 import os
-from pytube import YouTube
+import yt_dlp
 from pydub import AudioSegment
-from pydub.playback import play
 
-def download_videos(singer_name, num_videos):
-    videos = []
-    for i in range(num_videos):
-        # You can modify this URL pattern based on how you want to search for the singer
-        search_url = f"https://www.youtube.com/results?search_query={singer_name.replace(' ', '+')}"
-        yt = YouTube(search_url)  # Directly fetching from YouTube search results
-        video = yt.streams.filter(only_audio=True).first()
-        videos.append(video.download(filename=f"{singer_name}_{i}.mp4"))
-    return videos
+def download_videos(singer_name, num_videos, cookie_path):
+    # Define options for yt-dlp
+    options = {
+        'format': 'bestaudio/best',
+        'outtmpl': '%(title)s.%(ext)s',  # Output file naming
+        'cookies': cookie_path,  # Use cookies to bypass sign-in
+    }
+    
+    search_url = f"ytsearch{num_videos}:{singer_name}"
+    
+    with yt_dlp.YoutubeDL(options) as ydl:
+        try:
+            # Download audio files
+            ydl.download([search_url])
+            print(f"Successfully downloaded {num_videos} videos for {singer_name}.")
+        except Exception as e:
+            print(f"An error occurred while downloading: {e}")
 
-def convert_to_audio(videos):
-    audio_files = []
-    for video in videos:
-        audio_file = f"{os.path.splitext(video)[0]}.mp3"
-        audio_segment = AudioSegment.from_file(video)
-        audio_segment.export(audio_file, format="mp3")
-        audio_files.append(audio_file)
-    return audio_files
+def convert_to_audio(file_name):
+    """Convert video file to audio using pydub."""
+    if not file_name.endswith('.mp4'):
+        print(f"Skipping conversion for {file_name}. Not an MP4 file.")
+        return
 
-def cut_audio(audio_files, duration):
-    cut_audio_files = []
-    for audio_file in audio_files:
-        audio_segment = AudioSegment.from_file(audio_file)
-        cut_audio = audio_segment[:duration * 1000]  # Convert duration to milliseconds
-        cut_file = f"cut_{os.path.basename(audio_file)}"
-        cut_audio.export(cut_file, format="mp3")
-        cut_audio_files.append(cut_file)
-    return cut_audio_files
+    audio_file_name = f"{os.path.splitext(file_name)[0]}.mp3"
+    
+    # Convert video to audio
+    try:
+        video = AudioSegment.from_file(file_name, format='mp4')
+        video.export(audio_file_name, format='mp3')
+        print(f"Converted {file_name} to {audio_file_name}.")
+        return audio_file_name
+    except Exception as e:
+        print(f"An error occurred during conversion: {e}")
 
-def merge_audios(cut_audio_files, output_file):
-    combined = AudioSegment.empty()
-    for audio_file in cut_audio_files:
-        audio_segment = AudioSegment.from_file(audio_file)
-        combined += audio_segment
-    combined.export(output_file, format="mp3")
+def cut_audio(file_name, start_time, end_time):
+    """Cut audio file between start_time and end_time (in milliseconds)."""
+    try:
+        audio = AudioSegment.from_file(file_name)
+        cut_audio = audio[start_time:end_time]
+        cut_audio_name = f"cut_{os.path.basename(file_name)}"
+        cut_audio.export(cut_audio_name, format='mp3')
+        print(f"Cut audio file saved as {cut_audio_name}.")
+        return cut_audio_name
+    except Exception as e:
+        print(f"An error occurred while cutting the audio: {e}")
+
+def merge_audios(audio_files, output_file_name):
+    """Merge multiple audio files into one."""
+    try:
+        combined = AudioSegment.empty()
+        for file_name in audio_files:
+            audio = AudioSegment.from_file(file_name)
+            combined += audio
+        combined.export(output_file_name, format='mp3')
+        print(f"Merged audio files into {output_file_name}.")
+    except Exception as e:
+        print(f"An error occurred while merging audio files: {e}")
 
 def main():
-    if len(sys.argv) != 5:
-        print("Usage: python <program.py> <SingerName> <NumberOfVideos> <AudioDuration> <OutputFileName>")
-        sys.exit(1)
+    # Define the singer name and number of videos to download
+    singer_name = "Sharry Mann"  # Change to the desired artist's name
+    num_videos = 5  # Change to the number of videos you want to download
+    cookie_path = "path/to/cookies.txt"  # Specify the path to your cookies.txt file
 
-    singer_name = sys.argv[1]
-    try:
-        num_videos = int(sys.argv[2])
-        duration = int(sys.argv[3])
-    except ValueError:
-        print("Number of videos and audio duration must be integers.")
-        sys.exit(1)
+    # Check if cookies file exists
+    if not os.path.exists(cookie_path):
+        print(f"Cookies file not found at {cookie_path}. Please ensure the path is correct.")
+        return
 
-    output_file = sys.argv[4]
+    # Call the download function
+    download_videos(singer_name, num_videos, cookie_path)
 
-    if num_videos <= 10:
-        print("Number of videos must be greater than 10.")
-        sys.exit(1)
+    # Convert downloaded videos to audio
+    audio_files = []
+    for file in os.listdir():
+        if file.endswith('.mp4'):
+            audio_file = convert_to_audio(file)
+            if audio_file:
+                audio_files.append(audio_file)
 
-    if duration <= 20:
-        print("Audio duration must be greater than 20 seconds.")
-        sys.exit(1)
+    # Cut the first audio file (modify times as needed)
+    if audio_files:
+        cut_audio_file = cut_audio(audio_files[0], 10000, 30000)  # Cut from 10s to 30s
 
-    try:
-        # Step 1: Download videos
-        videos = download_videos(singer_name, num_videos)
-
-        # Step 2: Convert videos to audio
-        audio_files = convert_to_audio(videos)
-
-        cut_audio_files = cut_audio(audio_files, duration)
-
-        merge_audios(cut_audio_files, output_file)
-
-        print(f"Merged audio saved as {output_file}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    # Merge all audio files into one
+    merge_audios(audio_files, 'merged_audio.mp3')
 
 if __name__ == "__main__":
     main()
