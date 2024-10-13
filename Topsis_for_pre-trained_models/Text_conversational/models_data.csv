@@ -1,0 +1,5 @@
+Model , Accuracy , Inference Time , Memory Usage
+ModelA , 0.85 , 0.4 , 150
+ModelB , 0.80 , 0.5 , 200
+ModelC , 0.87 , 0.6 , 250
+ModelD , 0.90 , 0.3 , 180

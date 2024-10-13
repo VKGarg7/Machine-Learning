@@ -1,12 +1,14 @@
 import sys
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 def topsis(data, weights, impacts):
     weights = np.array([float(i) for i in weights.split(',')])
     impacts = np.array([1 if i == '+' else -1 for i in impacts.split(',')])
 
     normalized_data = data / np.sqrt((data**2).sum(axis=0))
+
     weighted_normalized_data = normalized_data * weights
 
     ideal_best = np.max(weighted_normalized_data * impacts, axis=0)
@@ -20,14 +22,10 @@ def topsis(data, weights, impacts):
     return scores
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
-        print("Usage: python <program.py> <InputDataFile> <Weights> <Impacts> <ResultFileName>")
-        sys.exit()
-
-    input_file = sys.argv[1]
-    weights = sys.argv[2]
-    impacts = sys.argv[3]
-    output_file = sys.argv[4]
+    input_file = 'models_data.csv'
+    weights = "0.5,0.3,0.2"
+    impacts = "+,-,-" 
+    output_file = 'results.csv'
 
     df = pd.read_csv(input_file)
 
@@ -45,3 +43,11 @@ if __name__ == "__main__":
 
     result_df.to_csv(output_file, index=False)
     print(f"Results saved to {output_file}")
+
+    plt.figure(figsize=(10, 6))
+    plt.barh(result_df['Model'], result_df['TOPSIS Score'], color='skyblue')
+    plt.xlabel('TOPSIS Score')
+    plt.title('TOPSIS Scores of Text Generation Models')
+    plt.grid(axis='x')
+    plt.savefig('results_plot.png')
+    plt.show()

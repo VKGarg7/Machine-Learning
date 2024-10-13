@@ -1,0 +1,6 @@
+Model , Accuracy , Inference Time (s) , Memory Usage (MB)
+BART , 0.89 , 0.45 , 250
+T5 , 0.85 , 0.50 , 220
+GPT-3 , 0.92 , 0.55 , 300
+Pegasus , 0.87 , 0.42 , 260
+LED , 0.83 , 0.70 , 240

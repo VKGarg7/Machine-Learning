@@ -59,23 +59,3 @@ if __name__ == "__main__":
     plot_results(result_df, output_file)
 
     print(f"Results saved to {output_file}")
-
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Load results
-results_df = pd.read_csv('results.csv')
-
-# Set the aesthetics for the plot
-sns.set(style="whitegrid")
-
-# Create a bar plot
-plt.figure(figsize=(10, 6))
-sns.barplot(x='TOPSIS Score', y='Model', data=results_df, palette='viridis')
-plt.title('TOPSIS Scores of Text Classification Models')
-plt.xlabel('TOPSIS Score')
-plt.ylabel('Model')
-plt.xlim(0, 1)  # Assuming scores are normalized between 0 and 1
-plt.tight_layout()
-plt.show()
