@@ -7,12 +7,12 @@ def download_images(query, num_images, output_folder):
     gis = GoogleImagesSearch(API_KEY, CX)
 
     search_params = {
-        'q': query,                  # search query
-        'num': num_images,           # number of images
-        'fileType': 'jpg',           # image type
-        'safe': 'off',               # enable/disable safe search
-        'imgType': 'photo',          # image type (photo)
-        'imgSize': 'large',          # size of images
+        'q': query,                  
+        'num': num_images,           
+        'fileType': 'jpg',          
+        'safe': 'off',               
+        'imgType': 'photo',          
+        'imgSize': 'large',          
     }
 
     gis.search(search_params=search_params, path_to_dir=output_folder)
