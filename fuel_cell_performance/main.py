@@ -9,7 +9,7 @@ from sklearn.svm import SVR
 data = pd.read_csv('Fuel_cell_performance_data-Full.csv')
 print("Dataset Loaded Successfully!")
 
-# Step 2: Select Target5 and drop other targets
+#Step 2: Select Target5 and drop other targets   
 target_col = 'Target5'
 data = data[[target_col] + [col for col in data.columns if col != target_col]]
 print(f"Data filtered to keep only {target_col}")
